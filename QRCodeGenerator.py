@@ -6,11 +6,15 @@ import qrcode
 import math
 from PIL import Image
 
+logosDirectory = "" # Quickly type what file to seach for center images in (Ex: "Logos/")
+codesDirectory = "" # Quickly type what file to generate QR codes in (Ex: "QR Codes/")
+fileType = "png"    # Allows you to adjust what file type images are saved as (Ex: png, jpg)
+
 def generate_qr_code(url, name, bx_sz, brdr, light_color, dark_color, img, img_size, correctionInput):
 
     # Gets the image
     if (img != "" and img_size > 0 and correctionInput > 0):
-        logo = Image.open(img)   # Be sure to navigate to whatever directory your image is in
+        logo = Image.open(logosDirectory + img)   # Be sure to navigate to whatever directory your image is in
     
         # Adding an image requires using correction
         match correctionInput:
@@ -37,6 +41,7 @@ def generate_qr_code(url, name, bx_sz, brdr, light_color, dark_color, img, img_s
         # I would guess this has to do with antialiasing?
         if (math.log2(bx_sz / 15).is_integer()):
             hsize += 1
+        hsize += 1
 
         logo = logo.resize((realImgSize, hsize), Image.ANTIALIAS)
     else:
@@ -49,7 +54,6 @@ def generate_qr_code(url, name, bx_sz, brdr, light_color, dark_color, img, img_s
         border = brdr                   # How many boxes thick the outside border gets
     )
 
-    
     QRcode.add_data(url)    # Adding URL or text to QRcode
     QRcode.make(fit=True)   # Generating QR code
 
@@ -63,7 +67,7 @@ def generate_qr_code(url, name, bx_sz, brdr, light_color, dark_color, img, img_s
         QRimg.paste(logo, pos)
 
     # Save the QR code
-    QRimg.save("QR Codes/" + name + '.png')
+    QRimg.save(codesDirectory + name + '.' + fileType)
     print('QR code generated!')             # Let the user know it generated correctly
 
 
